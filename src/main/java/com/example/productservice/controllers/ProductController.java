@@ -29,6 +29,6 @@ public class ProductController {
     // Example endpoint:: https://localhost:8080/products
     @GetMapping()
     public List<Product> getAllProduct(){
-        return new ArrayList<>();
+        return productService.getAllProduct();
     }
 }

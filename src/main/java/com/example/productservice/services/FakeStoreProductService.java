@@ -26,8 +26,18 @@ public class FakeStoreProductService implements ProductService {
         );
         return convertFakeStoreProductToProduct(fakeStoreProductDto);
     }
+
     public List<Product> getAllProduct(){
-        return new ArrayList<>();
+        FakeStoreProductDto[] fakeStoreProductDtos = restTemplate.getForObject(
+                "https://fakestoreapi.com/products/",
+                FakeStoreProductDto[].class
+        );
+
+        List<Product> products = new ArrayList<>();
+        for(FakeStoreProductDto fakeStoreProductDto : fakeStoreProductDtos){
+            products.add(convertFakeStoreProductToProduct(fakeStoreProductDto));
+        }
+        return products;
     }
 
     private Product convertFakeStoreProductToProduct(FakeStoreProductDto fakeStoreProductDto){
