@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Category extends BaseModel{
-    public String name;
-    public String description;
+    private String name;
+    private String description;
 }
