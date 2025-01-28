@@ -47,7 +47,10 @@ public class FakeStoreProductService implements ProductService {
     }
 
     public Product deleteProductById(Long id){
-        return null;
+        RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeStoreProductDto.class);
+        ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDto.class);
+        ResponseEntity<FakeStoreProductDto> responseEntity = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.DELETE, requestCallback, responseExtractor);
+        return convertFakeStoreProductToProduct(responseEntity.getBody());
     }
 
     public Product updateProductById(Long id, Product product){
@@ -58,7 +61,10 @@ public class FakeStoreProductService implements ProductService {
     }
 
     public Product replaceProductById(Long id, Product product){
-        return null;
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(product, FakeStoreProductDto.class);
+        HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeStoreProductDto.class, restTemplate.getMessageConverters());
+        FakeStoreProductDto fakeStoreProductDto = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.PUT, requestCallback, responseExtractor);
+        return convertFakeStoreProductToProduct(fakeStoreProductDto);
     }
 
     private Product convertFakeStoreProductToProduct(FakeStoreProductDto fakeStoreProductDto){

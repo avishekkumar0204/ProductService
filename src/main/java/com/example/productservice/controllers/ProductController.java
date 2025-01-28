@@ -39,7 +39,7 @@ public class ProductController {
     // Example endpoint:: https://localhost:8080/products/10
     @DeleteMapping("/{id}")
     public Product deleteProductById(@PathVariable("id") Long id){
-        return null;
+        return productService.deleteProductById(id);
     }
 
     // Example endpoint:: https://localhost:8080/products/10
@@ -50,7 +50,7 @@ public class ProductController {
 
     // Example endpoint:: https://localhost:8080/products/10
     @PutMapping("/{id}")
-    public Product replaceProductById(@PathVariable("id") Long id, Product product){
-        return null;
+    public Product replaceProductById(@PathVariable("id") Long id, @RequestBody Product product){
+        return productService.updateProductById(id, product);
     }
 }
