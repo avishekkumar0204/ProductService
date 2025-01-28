@@ -1,6 +1,7 @@
 package com.example.productservice.services;
 
 import com.example.productservice.dtos.FakeStoreProductDto;
+import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 
@@ -24,12 +25,14 @@ public class FakeStoreProductService implements ProductService {
     }
 
 
-    public Product getProductById(Long id){
+    public Product getProductById(Long id) throws ProductNotFoundException{
         System.out.println("FakeStoreProductService::getProductById-> id:::" + id);
         FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + id,
                 FakeStoreProductDto.class
         );
+        if(fakeStoreProductDto == null)
+            throw new ProductNotFoundException("Product with id " + id + " Not Found");
         return convertFakeStoreProductToProduct(fakeStoreProductDto);
     }
 
@@ -46,11 +49,14 @@ public class FakeStoreProductService implements ProductService {
         return products;
     }
 
-    public Product deleteProductById(Long id){
+    public Product deleteProductById(Long id) throws ProductNotFoundException{
         RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeStoreProductDto.class);
         ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDto.class);
         ResponseEntity<FakeStoreProductDto> responseEntity = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.DELETE, requestCallback, responseExtractor);
-        return convertFakeStoreProductToProduct(responseEntity.getBody());
+        FakeStoreProductDto responseBody = responseEntity.getBody();
+        if(responseBody == null)
+            throw new ProductNotFoundException("Product with id " + id + " Not Found");
+        return convertFakeStoreProductToProduct(responseBody);
     }
 
     public Product updateProductById(Long id, Product product){

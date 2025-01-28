@@ -1,6 +1,7 @@
 package com.example.productservice.controllers;
 
 
+import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
 
@@ -27,20 +28,13 @@ public class ProductController {
 
     // Example endpoint:: https://localhost:8080/products/10
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id){
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) throws ProductNotFoundException{
         System.out.println("ProductController::getProductById-> id:::" + id);
-        ResponseEntity<Product> responseEntity = null;
-        try{
-            Product product  = productService.getProductById(id);
-            responseEntity = new ResponseEntity<>(
-                product,
-                HttpStatus.OK
-            );
-        }catch(Exception e){
-            responseEntity = new ResponseEntity<>(
-                HttpStatus.NOT_FOUND
-            );
-        }
+        Product product  = productService.getProductById(id);
+        ResponseEntity<Product> responseEntity = new ResponseEntity<>(
+            product,
+            HttpStatus.OK
+        );
         return responseEntity;
     }
 
@@ -52,19 +46,12 @@ public class ProductController {
 
     // Example endpoint:: https://localhost:8080/products/10
     @DeleteMapping("/{id}")
-    public ResponseEntity<Product> deleteProductById(@PathVariable("id") Long id){
-        ResponseEntity<Product> responseEntity = null;
-        try{
-            Product product  = productService.deleteProductById(id);
-            responseEntity = new ResponseEntity<>(
-                product,
-                HttpStatus.NO_CONTENT
-            );
-        }catch(Exception e){
-            responseEntity = new ResponseEntity<>(
-                HttpStatus.NOT_FOUND
-            );
-        }
+    public ResponseEntity<Product> deleteProductById(@PathVariable("id") Long id) throws ProductNotFoundException{
+        Product product  = productService.deleteProductById(id);
+        ResponseEntity<Product> responseEntity = new ResponseEntity<>(
+            product,
+            HttpStatus.NO_CONTENT
+        );
         return responseEntity;
     }
 
