@@ -4,6 +4,8 @@ package com.example.productservice.controllers;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,9 +27,21 @@ public class ProductController {
 
     // Example endpoint:: https://localhost:8080/products/10
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable("id") Long id){
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id){
         System.out.println("ProductController::getProductById-> id:::" + id);
-        return productService.getProductById(id);
+        ResponseEntity<Product> responseEntity = null;
+        try{
+            Product product  = productService.getProductById(id);
+            responseEntity = new ResponseEntity<>(
+                product,
+                HttpStatus.OK
+            );
+        }catch(Exception e){
+            responseEntity = new ResponseEntity<>(
+                HttpStatus.NOT_FOUND
+            );
+        }
+        return responseEntity;
     }
 
     // Example endpoint:: https://localhost:8080/products
@@ -38,8 +52,20 @@ public class ProductController {
 
     // Example endpoint:: https://localhost:8080/products/10
     @DeleteMapping("/{id}")
-    public Product deleteProductById(@PathVariable("id") Long id){
-        return productService.deleteProductById(id);
+    public ResponseEntity<Product> deleteProductById(@PathVariable("id") Long id){
+        ResponseEntity<Product> responseEntity = null;
+        try{
+            Product product  = productService.deleteProductById(id);
+            responseEntity = new ResponseEntity<>(
+                product,
+                HttpStatus.NO_CONTENT
+            );
+        }catch(Exception e){
+            responseEntity = new ResponseEntity<>(
+                HttpStatus.NOT_FOUND
+            );
+        }
+        return responseEntity;
     }
 
     // Example endpoint:: https://localhost:8080/products/10
