@@ -1,7 +1,9 @@
 package com.example.productservice.services;
 
 import com.example.productservice.exceptions.ProductNotFoundException;
+import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
+import com.example.productservice.repositories.CategoryRepository;
 import com.example.productservice.repositories.ProductRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -13,8 +15,14 @@ import java.util.Optional;
 @Primary
 public class SelfStoreProductService implements ProductService {
     private ProductRepository productRepository;
-    public SelfStoreProductService(ProductRepository productRepository){
+    private CategoryRepository categoryRepository;
+
+    public SelfStoreProductService(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository
+    ){
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -48,6 +56,11 @@ public class SelfStoreProductService implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
-        return null;
+        Category category = product.getCategory();
+        if(category.getId() == null){
+            Category newCategory = categoryRepository.save(category);
+            product.setCategory(newCategory);
+        }
+        return productRepository.save(product);
     }
 }
