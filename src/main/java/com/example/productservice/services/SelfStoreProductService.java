@@ -45,13 +45,49 @@ public class SelfStoreProductService implements ProductService {
     }
 
     @Override
-    public Product updateProductById(Long id, Product product) {
-        return null;
+    public Product updateProductById(Long id, Product product) throws ProductNotFoundException {
+        Optional<Product> productOptional = productRepository.findProductById(id);
+        if(productOptional.isEmpty()){
+            throw new ProductNotFoundException("Product with id " + id + " not found");
+        }
+        Product existingProduct = productOptional.get();
+        if(product.getTitle() != null){
+            existingProduct.setTitle(product.getTitle());
+        }
+        if(product.getPrice() != null){
+            existingProduct.setPrice(product.getPrice());
+        }
+        if(product.getCategory() != null){
+            Category category = product.getCategory();
+            if(category.getId() == null) {
+                Category newCategory = categoryRepository.save(category);
+                existingProduct.setCategory(newCategory);
+            }
+        }
+        return productRepository.save(existingProduct);
     }
 
     @Override
-    public Product replaceProductById(Long id, Product product) {
-        return null;
+    public Product replaceProductById(Long id, Product product)  {
+        Optional<Product> productOptional = productRepository.findProductById(id);
+        if(productOptional.isEmpty()){
+            return addProduct(product);
+        }
+        Product existingProduct = productOptional.get();
+        if(product.getTitle() != null){
+            existingProduct.setTitle(product.getTitle());
+        }
+        if(product.getPrice() != null){
+            existingProduct.setPrice(product.getPrice());
+        }
+        if(product.getCategory() != null){
+            Category category = product.getCategory();
+            if(category.getId() == null) {
+                Category newCategory = categoryRepository.save(category);
+                existingProduct.setCategory(newCategory);
+            }
+        }
+        return productRepository.save(existingProduct);
     }
 
     @Override

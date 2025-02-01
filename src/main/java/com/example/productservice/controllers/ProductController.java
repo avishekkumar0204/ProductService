@@ -49,14 +49,14 @@ public class ProductController {
 
     // Example endpoint:: https://localhost:8080/products/10
     @PatchMapping("/{id}")
-    public Product updateProductById(@PathVariable("id") Long id, @RequestBody Product product){
+    public Product updateProductById(@PathVariable("id") Long id, @RequestBody Product product) throws ProductNotFoundException {
         return productService.updateProductById(id, product);
     }
 
     // Example endpoint:: https://localhost:8080/products/10
     @PutMapping("/{id}")
-    public Product replaceProductById(@PathVariable("id") Long id, @RequestBody Product product){
-        return productService.updateProductById(id, product);
+    public Product replaceProductById(@PathVariable("id") Long id, @RequestBody Product product) {
+        return productService.replaceProductById(id, product);
     }
 
     @PostMapping()
