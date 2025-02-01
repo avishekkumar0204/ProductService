@@ -5,6 +5,7 @@ import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,14 +50,13 @@ public class FakeStoreProductService implements ProductService {
         return products;
     }
 
-    public Product deleteProductById(Long id) throws ProductNotFoundException{
+    public void deleteProductById(Long id) throws ProductNotFoundException{
         RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeStoreProductDto.class);
         ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDto.class);
         ResponseEntity<FakeStoreProductDto> responseEntity = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.DELETE, requestCallback, responseExtractor);
         FakeStoreProductDto responseBody = responseEntity.getBody();
         if(responseBody == null)
             throw new ProductNotFoundException("Product with id " + id + " Not Found");
-        return convertFakeStoreProductToProduct(responseBody);
     }
 
     public Product updateProductById(Long id, Product product){
@@ -71,6 +71,10 @@ public class FakeStoreProductService implements ProductService {
         HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeStoreProductDto.class, restTemplate.getMessageConverters());
         FakeStoreProductDto fakeStoreProductDto = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.PUT, requestCallback, responseExtractor);
         return convertFakeStoreProductToProduct(fakeStoreProductDto);
+    }
+
+    public Product addProduct(Product product){
+        return new Product();
     }
 
     private Product convertFakeStoreProductToProduct(FakeStoreProductDto fakeStoreProductDto){
