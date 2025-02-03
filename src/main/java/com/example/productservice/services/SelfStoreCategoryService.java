@@ -19,14 +19,14 @@ public class SelfStoreCategoryService implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategory() {
-        System.out.println("SelfStoreCategoryService::getAllCategory");
-        return categoryRepository.findAll();
+    public Category getCategoryById(Long id) {
+        System.out.println("SelfStoreCategoryService::getCategoryById");
+        return categoryRepository.findCategoryById(id);
     }
 
     @Override
-    public List<Product> getAllProductByCategoryId(Long id) {
-        System.out.println("SelfStoreCategoryService::getAllProductByCategoryId");
-        return productRepository.findProductByCategoryId(id);
+    public List<Category> getAllCategory() {
+        System.out.println("SelfStoreCategoryService::getAllCategory");
+        return categoryRepository.findAll();
     }
 }

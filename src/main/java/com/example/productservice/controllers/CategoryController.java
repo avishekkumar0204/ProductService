@@ -18,16 +18,15 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService){
         this.categoryService = categoryService;
     }
+    @GetMapping("/{id}")
+    public Category getCategoryById(@PathVariable("id") Long id){
+        System.out.println("CategoryController::getCategoryById");
+        return categoryService.getCategoryById(id);
+    }
 
     @GetMapping()
     public List<Category> getAllCategory(){
         System.out.println("CategoryController::getAllCategory");
         return categoryService.getAllCategory();
-    }
-
-    @GetMapping("/{id}")
-    public List<Product> getAllProductByCategoryId(@PathVariable("id") Long id){
-        System.out.println("CategoryController::getAllProductByCategoryId");
-        return categoryService.getAllProductByCategoryId(id);
     }
 }
