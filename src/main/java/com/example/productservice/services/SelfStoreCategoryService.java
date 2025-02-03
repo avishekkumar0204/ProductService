@@ -1,5 +1,6 @@
 package com.example.productservice.services;
 
+import com.example.productservice.exceptions.CategoryNotFoundException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import com.example.productservice.repositories.CategoryRepository;
@@ -7,6 +8,7 @@ import com.example.productservice.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SelfStoreCategoryService implements CategoryService {
@@ -19,9 +21,13 @@ public class SelfStoreCategoryService implements CategoryService {
     }
 
     @Override
-    public Category getCategoryById(Long id) {
+    public Category getCategoryById(Long id) throws CategoryNotFoundException {
         System.out.println("SelfStoreCategoryService::getCategoryById");
-        return categoryRepository.findCategoryById(id);
+        Optional<Category> categoryOptional = categoryRepository.findCategoryById(id);
+        if(categoryOptional.isEmpty()){
+            throw new CategoryNotFoundException("Category with id " + id + " not found");
+        }
+        return categoryOptional.get();
     }
 
     @Override

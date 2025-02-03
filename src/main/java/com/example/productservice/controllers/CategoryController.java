@@ -1,5 +1,6 @@
 package com.example.productservice.controllers;
 
+import com.example.productservice.exceptions.CategoryNotFoundException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.CategoryService;
@@ -19,7 +20,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
     @GetMapping("/{id}")
-    public Category getCategoryById(@PathVariable("id") Long id){
+    public Category getCategoryById(@PathVariable("id") Long id) throws CategoryNotFoundException {
         System.out.println("CategoryController::getCategoryById");
         return categoryService.getCategoryById(id);
     }
