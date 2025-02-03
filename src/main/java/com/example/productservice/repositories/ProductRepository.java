@@ -13,6 +13,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAll();
     void deleteById(Long id);
     Product save(Product product);
+    List<Product> findProductByCategoryId(Long id);
 }
 
 
